@@ -654,6 +654,13 @@
                                 <option value="4">4th (Anchor)</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="relationship">Relationship</label>
+                            <select id="relationship">
+                                <option value="My Child">My Child</option>
+                                <option value="Other">Other Swimmer</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div></div>
@@ -727,7 +734,7 @@
         const availableEmojis = ['🐬', '🦈', '🐙', '🐠', '🐟', '🦭', '🐳', '🦑', '🌊', '⭐', '🚀', '⚡', '🔥', '💎', '🎯', '🏆', '🎪', '🎨', '🎭', '🎸'];
         let nextEmojiIndex = 0;
 
-        // Your children's names for typeahead
+        // Your children's names for typeahead (no longer used but keeping for reference)
         const myChildren = ["Bridget", "Blake", "Connor"];
 
         // Common swim events for typeahead
@@ -1116,6 +1123,7 @@
             document.getElementById('eventName').value = '';
             document.getElementById('seedTime').value = '';
             document.getElementById('relayPosition').value = '';
+            document.getElementById('relationship').value = 'My Child';
             checkForRelay();
         }
 
@@ -1238,6 +1246,7 @@
             document.getElementById('eventName').value = '';
             document.getElementById('seedTime').value = '';
             document.getElementById('relayPosition').value = '';
+            document.getElementById('relationship').value = 'My Child';
             checkForRelay();
         }
 
