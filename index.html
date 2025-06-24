@@ -322,6 +322,8 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            line-height: 1.3;
+            margin-top: 2px;
         }
         
         .compact-heat-lane {
@@ -596,9 +598,11 @@
                                     <option value="400 Individual Medley">400 Individual Medley</option>
                                 </optgroup>
                                 <optgroup label="Relays">
+                                    <option value="100 Freestyle Relay" data-relay="true">100 Freestyle Relay</option>
                                     <option value="200 Freestyle Relay" data-relay="true">200 Freestyle Relay</option>
                                     <option value="400 Freestyle Relay" data-relay="true">400 Freestyle Relay</option>
                                     <option value="800 Freestyle Relay" data-relay="true">800 Freestyle Relay</option>
+                                    <option value="100 Medley Relay" data-relay="true">100 Medley Relay</option>
                                     <option value="200 Medley Relay" data-relay="true">200 Medley Relay</option>
                                     <option value="400 Medley Relay" data-relay="true">400 Medley Relay</option>
                                 </optgroup>
@@ -708,7 +712,7 @@
         function isRelayEvent(eventName) {
             if (!eventName) return false;
             // Check if it's one of the relay events
-            const relayEvents = ['200 Freestyle Relay', '400 Freestyle Relay', '800 Freestyle Relay', '200 Medley Relay', '400 Medley Relay'];
+            const relayEvents = ['100 Freestyle Relay', '200 Freestyle Relay', '400 Freestyle Relay', '800 Freestyle Relay', '100 Medley Relay', '200 Medley Relay', '400 Medley Relay'];
             return relayEvents.includes(eventName);
         }
 
@@ -914,8 +918,8 @@
                             ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
                         </div>
                         <div class="compact-event-info">
-                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
-                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
+                            <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span style="flex-shrink: 0;">Seed: ${event.seedTime}</span>` : ''}
                         </div>
                     </div>
                     <div class="compact-heat-lane">
@@ -946,22 +950,22 @@
 
             eventsList.innerHTML = sortedEvents.map(event => `
                 <div class="compact-event-item ${event.completed ? 'completed' : ''}">
-                    <div class="custom-checkbox ${event.completed ? 'checked' : ''}" onclick="toggleEventCompleted(${event.id})">
-                        ${event.completed ? '✓' : ''}
-                    </div>
                     <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
                     <div class="compact-event-details">
                         <div class="compact-swimmer-name">
                             ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
                         </div>
                         <div class="compact-event-info">
-                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
-                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
+                            <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span style="flex-shrink: 0;">Seed: ${event.seedTime}</span>` : ''}
                         </div>
                     </div>
                     <div class="compact-heat-lane">
                         <span class="compact-heat">H${event.heat}</span>
                         <span class="compact-lane">L${event.lane}</span>
+                    </div>
+                    <div class="custom-checkbox ${event.completed ? 'checked' : ''}" onclick="toggleEventCompleted(${event.id})">
+                        ${event.completed ? '✓' : ''}
                     </div>
                 </div>
             `).join('');
