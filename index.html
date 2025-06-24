@@ -206,41 +206,6 @@
             margin-bottom: 15px;
         }
         
-        .typeahead-container {
-            position: relative;
-        }
-        
-        .typeahead-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-top: none;
-            border-radius: 0 0 6px 6px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-        }
-        
-        .typeahead-suggestion {
-            padding: 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #f1f5f9;
-            transition: background-color 0.2s;
-        }
-        
-        .typeahead-suggestion:hover,
-        .typeahead-suggestion.selected {
-            background-color: #f8fafc;
-        }
-        
-        .typeahead-suggestion:last-child {
-            border-bottom: none;
-        }
-        
         .view-toggle {
             display: flex;
             background: #f1f5f9;
@@ -573,10 +538,9 @@
                 <div class="input-section">
                     <h3 style="margin-bottom: 20px; color: #374151;">Manage Events</h3>
                     <div class="form-row">
-                        <div class="form-group typeahead-container">
+                        <div class="form-group">
                             <label for="swimmerName">Swimmer Name</label>
-                            <input type="text" id="swimmerName" placeholder="Enter swimmer's name" autocomplete="off">
-                            <div class="typeahead-suggestions" id="swimmerSuggestions"></div>
+                            <input type="text" id="swimmerName" placeholder="Enter swimmer's name">
                         </div>
                         <div class="form-group">
                             <label for="eventNumber">Event #</label>
@@ -654,19 +618,7 @@
                                 <option value="4">4th (Anchor)</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="relationship">Relationship</label>
-                            <select id="relationship">
-                                <option value="My Child">My Child</option>
-                                <option value="Other">Other Swimmer</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div style="display: flex; gap: 10px;">
+                        <div style="display: flex; gap: 10px; align-items: end;">
                             <button class="btn" onclick="addEvent()">Add Event</button>
                         </div>
                     </div>
@@ -705,20 +657,6 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="events-list" style="display: none;">
-                <div class="events-header">
-                    <h3 style="color: #374151;">Upcoming Events</h3>
-                    <span class="events-count" id="eventCount">0 events</span>
-                </div>
-                <div id="eventsList">
-                    <div class="empty-state">
-                        <div class="empty-icon">🏊‍♂️</div>
-                        <h4>No events added yet</h4>
-                        <p>Add your first swimmer's event above to get started!</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -727,26 +665,11 @@
         let selectedSuggestionIndex = -1;
         let currentView = 'add';
         let currentMeet = null;
-        // Need to add swimmerColors back since we're still using it for the color-coded event numbers
         let swimmerColors = {}; // Track color assignments for each swimmer
         let nextColorIndex = 0;
         let swimmerEmojis = {}; // Track emoji assignments for each swimmer
         const availableEmojis = ['🐬', '🦈', '🐙', '🐠', '🐟', '🦭', '🐳', '🦑', '🌊', '⭐', '🚀', '⚡', '🔥', '💎', '🎯', '🏆', '🎪', '🎨', '🎭', '🎸'];
         let nextEmojiIndex = 0;
-
-        // Your children's names for typeahead (no longer used but keeping for reference)
-        const myChildren = ["Bridget", "Blake", "Connor"];
-
-        // Common swim events for typeahead
-        const commonEvents = [
-            "25 Freestyle", "50 Freestyle", "100 Freestyle", "200 Freestyle", "400 Freestyle", "500 Freestyle", "800 Freestyle", "1000 Freestyle", "1500 Freestyle", "1650 Freestyle",
-            "25 Backstroke", "50 Backstroke", "100 Backstroke", "200 Backstroke",
-            "25 Breaststroke", "50 Breaststroke", "100 Breaststroke", "200 Breaststroke",
-            "25 Butterfly", "50 Butterfly", "100 Butterfly", "200 Butterfly",
-            "100 Individual Medley", "200 Individual Medley", "400 Individual Medley",
-            "200 Freestyle Relay", "400 Freestyle Relay", "800 Freestyle Relay",
-            "200 Medley Relay", "400 Medley Relay"
-        ];
 
         // Helper functions - defined first to avoid reference errors
         function checkForRelay() {
@@ -868,206 +791,6 @@
             // No typeahead needed anymore - simple inputs
         }
 
-        function setupSwimmerNameTypeahead() {
-            const swimmerNameInput = document.getElementById('swimmerName');
-            const suggestionsDiv = document.getElementById('swimmerSuggestions');
-
-            swimmerNameInput.addEventListener('input', function() {
-                const query = this.value.toLowerCase().trim();
-                
-                if (query.length === 0) {
-                    hideSwimmerSuggestions();
-                    return;
-                }
-
-                const matches = myChildren.filter(name => 
-                    name.toLowerCase().includes(query)
-                );
-
-                if (matches.length > 0) {
-                    showSwimmerSuggestions(matches);
-                } else {
-                    hideSwimmerSuggestions();
-                }
-            });
-
-            swimmerNameInput.addEventListener('keydown', function(e) {
-                const suggestions = suggestionsDiv.querySelectorAll('.typeahead-suggestion');
-                
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
-                    updateSelection(suggestions);
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
-                    updateSelection(suggestions);
-                } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
-                    e.preventDefault();
-                    const selectedText = suggestions[selectedSuggestionIndex].textContent;
-                    selectSwimmerSuggestion(selectedText);
-                } else if (e.key === 'Escape') {
-                    hideSwimmerSuggestions();
-                }
-            });
-
-            // Hide suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!swimmerNameInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
-                    hideSwimmerSuggestions();
-                }
-            });
-        }
-
-        function showSwimmerSuggestions(matches) {
-            const suggestionsDiv = document.getElementById('swimmerSuggestions');
-            suggestionsDiv.innerHTML = matches.map(match => 
-                `<div class="typeahead-suggestion" onclick="selectSwimmerSuggestion('${match}')">${match}</div>`
-            ).join('');
-            suggestionsDiv.style.display = 'block';
-        }
-
-        function hideSwimmerSuggestions() {
-            const suggestionsDiv = document.getElementById('swimmerSuggestions');
-            suggestionsDiv.style.display = 'none';
-            selectedSuggestionIndex = -1;
-        }
-
-        function selectSwimmerSuggestion(name) {
-            document.getElementById('swimmerName').value = name;
-            hideSwimmerSuggestions();
-        }
-
-        function setupEventNameTypeahead() {
-            const eventNameInput = document.getElementById('eventName');
-            const suggestionsDiv = document.getElementById('eventSuggestions');
-
-            if (!eventNameInput || !suggestionsDiv) return;
-
-            eventNameInput.addEventListener('input', function() {
-                try {
-                    const query = this.value.toLowerCase().trim();
-                    selectedSuggestionIndex = -1;
-                    
-                    if (query.length === 0) {
-                        hideSuggestions();
-                        checkForRelay();
-                        return;
-                    }
-
-                    const matches = commonEvents.filter(event => 
-                        event.toLowerCase().includes(query)
-                    ).slice(0, 8); // Limit to 8 suggestions
-
-                    if (matches.length > 0) {
-                        showSuggestions(matches);
-                    } else {
-                        hideSuggestions();
-                    }
-                    
-                    checkForRelay();
-                } catch (error) {
-                    console.error('Error in event name input:', error);
-                }
-            });
-
-            eventNameInput.addEventListener('change', function() {
-                try {
-                    checkForRelay();
-                } catch (error) {
-                    console.error('Error in event name change:', error);
-                }
-            });
-
-            eventNameInput.addEventListener('keydown', function(e) {
-                try {
-                    const suggestions = suggestionsDiv.querySelectorAll('.typeahead-suggestion');
-                    
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
-                        updateSelection(suggestions);
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
-                        updateSelection(suggestions);
-                    } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
-                        e.preventDefault();
-                        const selectedText = suggestions[selectedSuggestionIndex].textContent;
-                        selectSuggestion(selectedText);
-                    } else if (e.key === 'Escape') {
-                        hideSuggestions();
-                    }
-                } catch (error) {
-                    console.error('Error in event name keydown:', error);
-                }
-            });
-
-            // Hide suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                try {
-                    if (!eventNameInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
-                        hideSuggestions();
-                    }
-                } catch (error) {
-                    console.error('Error in document click:', error);
-                }
-            });
-        }
-
-        function showSuggestions(matches) {
-            try {
-                const suggestionsDiv = document.getElementById('eventSuggestions');
-                if (!suggestionsDiv) return;
-                
-                suggestionsDiv.innerHTML = matches.map(match => 
-                    `<div class="typeahead-suggestion" onclick="selectSuggestionSafe('${match.replace(/'/g, "\\'")})">${match}</div>`
-                ).join('');
-                suggestionsDiv.style.display = 'block';
-            } catch (error) {
-                console.error('Error showing suggestions:', error);
-            }
-        }
-
-        function hideSuggestions() {
-            try {
-                const suggestionsDiv = document.getElementById('eventSuggestions');
-                if (suggestionsDiv) {
-                    suggestionsDiv.style.display = 'none';
-                    selectedSuggestionIndex = -1;
-                }
-            } catch (error) {
-                console.error('Error hiding suggestions:', error);
-            }
-        }
-
-        function selectSuggestionSafe(eventName) {
-            try {
-                selectSuggestion(eventName);
-            } catch (error) {
-                console.error('Error in selectSuggestionSafe:', error);
-            }
-        }
-
-        function updateSelection(suggestions) {
-            suggestions.forEach((suggestion, index) => {
-                suggestion.classList.toggle('selected', index === selectedSuggestionIndex);
-            });
-        }
-
-        function selectSuggestion(eventName) {
-            try {
-                document.getElementById('eventName').value = eventName;
-                hideSuggestions();
-                // Use setTimeout to ensure DOM is updated before checking
-                setTimeout(function() {
-                    checkForRelay();
-                }, 10);
-            } catch (error) {
-                console.error('Error in selectSuggestion:', error);
-            }
-        }
-
         function addEvent() {
             const swimmerName = document.getElementById('swimmerName').value.trim();
             const eventNumber = parseInt(document.getElementById('eventNumber').value);
@@ -1111,8 +834,30 @@
             events.push(event);
             clearFormExceptSwimmer();
             renderEvents();
-            
-            // Stay on manage events page - don't auto-switch
+        }
+
+        function toggleEventCompleted(id) {
+            const event = events.find(e => e.id === id);
+            if (event) {
+                event.completed = !event.completed;
+                renderEvents();
+            }
+        }
+
+        function removeEvent(id) {
+            events = events.filter(event => event.id !== id);
+            renderEvents();
+        }
+
+        function clearForm() {
+            document.getElementById('swimmerName').value = '';
+            document.getElementById('eventNumber').value = '';
+            document.getElementById('heat').value = '';
+            document.getElementById('lane').value = '';
+            document.getElementById('eventName').value = '';
+            document.getElementById('seedTime').value = '';
+            document.getElementById('relayPosition').value = '';
+            checkForRelay();
         }
 
         function clearFormExceptSwimmer() {
@@ -1123,16 +868,102 @@
             document.getElementById('eventName').value = '';
             document.getElementById('seedTime').value = '';
             document.getElementById('relayPosition').value = '';
-            document.getElementById('relationship').value = 'My Child';
             checkForRelay();
         }
 
-        function toggleEventCompleted(id) {
-            const event = events.find(e => e.id === id);
-            if (event) {
-                event.completed = !event.completed;
+        function clearAll() {
+            if (events.length === 0) return;
+            if (confirm('Are you sure you want to clear all events? This will prepare for a new meet.')) {
+                events = [];
                 renderEvents();
             }
+        }
+
+        function renderEvents() {
+            renderManageEventsList();
+            renderChecklistEventsList();
+        }
+
+        function renderManageEventsList() {
+            const eventsList = document.getElementById('manageEventsList');
+            const eventCount = document.getElementById('manageEventCount');
+            
+            // Sort events by event number
+            const sortedEvents = [...events].sort((a, b) => a.eventNumber - b.eventNumber);
+            
+            // Update count
+            eventCount.textContent = `${events.length} event${events.length !== 1 ? 's' : ''}`;
+            
+            if (sortedEvents.length === 0) {
+                eventsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🏊‍♂️</div>
+                        <h4>No events added yet</h4>
+                        <p>Add your first swimmer's event above!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            eventsList.innerHTML = sortedEvents.map(event => `
+                <div class="compact-event-item ${event.completed ? 'completed' : ''}">
+                    <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
+                    <div class="compact-event-details">
+                        <div class="compact-swimmer-name">
+                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
+                        </div>
+                        <div class="compact-event-info">
+                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="compact-heat-lane">
+                        <span class="compact-heat">H${event.heat}</span>
+                        <span class="compact-lane">L${event.lane}</span>
+                    </div>
+                    <button class="btn btn-danger" onclick="removeEvent(${event.id})" style="padding: 6px 10px; font-size: 0.8em;">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function renderChecklistEventsList() {
+            const eventsList = document.getElementById('checklistEventsList');
+            
+            // Sort events by event number
+            const sortedEvents = [...events].sort((a, b) => a.eventNumber - b.eventNumber);
+            
+            if (sortedEvents.length === 0) {
+                eventsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🏊‍♂️</div>
+                        <h4>No events to track</h4>
+                        <p>Add events in the Manage Events tab first!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            eventsList.innerHTML = sortedEvents.map(event => `
+                <div class="compact-event-item ${event.completed ? 'completed' : ''}">
+                    <div class="custom-checkbox ${event.completed ? 'checked' : ''}" onclick="toggleEventCompleted(${event.id})">
+                        ${event.completed ? '✓' : ''}
+                    </div>
+                    <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
+                    <div class="compact-event-details">
+                        <div class="compact-swimmer-name">
+                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
+                        </div>
+                        <div class="compact-event-info">
+                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="compact-heat-lane">
+                        <span class="compact-heat">H${event.heat}</span>
+                        <span class="compact-lane">L${event.lane}</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function shareEventList() {
@@ -1232,137 +1063,6 @@
             const textarea = content.querySelector('textarea');
             textarea.select();
         }
-
-        function removeEvent(id) {
-            events = events.filter(event => event.id !== id);
-            renderEvents();
-        }
-
-        function clearForm() {
-            document.getElementById('swimmerName').value = '';
-            document.getElementById('eventNumber').value = '';
-            document.getElementById('heat').value = '';
-            document.getElementById('lane').value = '';
-            document.getElementById('eventName').value = '';
-            document.getElementById('seedTime').value = '';
-            document.getElementById('relayPosition').value = '';
-            document.getElementById('relationship').value = 'My Child';
-            checkForRelay();
-        }
-
-        function clearCompleted() {
-            const completedCount = events.filter(e => e.completed).length;
-            if (completedCount === 0) {
-                alert('No completed events to clear.');
-                return;
-            }
-            if (confirm(`Clear ${completedCount} completed event${completedCount !== 1 ? 's' : ''}?`)) {
-                events = events.filter(event => !event.completed);
-                renderEvents();
-            }
-        }
-
-        function clearAll() {
-            if (events.length === 0) return;
-            if (confirm('Are you sure you want to clear all events? This will prepare for a new meet.')) {
-                events = [];
-                renderEvents();
-            }
-        }
-
-        function renderEvents() {
-            renderManageEventsList();
-            renderChecklistEventsList();
-        }
-
-        function renderManageEventsList() {
-            const eventsList = document.getElementById('manageEventsList');
-            const eventCount = document.getElementById('manageEventCount');
-            
-            // Sort events by event number
-            const sortedEvents = [...events].sort((a, b) => a.eventNumber - b.eventNumber);
-            
-            // Update count
-            eventCount.textContent = `${events.length} event${events.length !== 1 ? 's' : ''}`;
-            
-            if (sortedEvents.length === 0) {
-                eventsList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🏊‍♂️</div>
-                        <h4>No events added yet</h4>
-                        <p>Add your first swimmer's event above!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            eventsList.innerHTML = sortedEvents.map(event => `
-                <div class="compact-event-item ${event.completed ? 'completed' : ''}">
-                    <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
-                    <div class="compact-event-details">
-                        <div class="compact-swimmer-name">
-                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
-                        </div>
-                        <div class="compact-event-info">
-                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
-                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
-                        </div>
-                    </div>
-                    <div class="compact-heat-lane">
-                        <span class="compact-heat">H${event.heat}</span>
-                        <span class="compact-lane">L${event.lane}</span>
-                    </div>
-                    <button class="btn btn-danger" onclick="removeEvent(${event.id})" style="padding: 6px 10px; font-size: 0.8em;">Remove</button>
-                </div>
-            `).join('');
-        }
-
-        function renderChecklistEventsList() {
-            const eventsList = document.getElementById('checklistEventsList');
-            
-            // Sort events by event number
-            const sortedEvents = [...events].sort((a, b) => a.eventNumber - b.eventNumber);
-            
-            if (sortedEvents.length === 0) {
-                eventsList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🏊‍♂️</div>
-                        <h4>No events to track</h4>
-                        <p>Add events in the Manage Events tab first!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            eventsList.innerHTML = sortedEvents.map(event => `
-                <div class="compact-event-item ${event.completed ? 'completed' : ''}">
-                    <div class="custom-checkbox ${event.completed ? 'checked' : ''}" onclick="toggleEventCompleted(${event.id})">
-                        ${event.completed ? '✓' : ''}
-                    </div>
-                    <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
-                    <div class="compact-event-details">
-                        <div class="compact-swimmer-name">
-                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
-                        </div>
-                        <div class="compact-event-info">
-                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
-                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
-                        </div>
-                    </div>
-                    <div class="compact-heat-lane">
-                        <span class="compact-heat">H${event.heat}</span>
-                        <span class="compact-lane">L${event.lane}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Allow Enter key to add event
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addEvent();
-            }
-        });
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
