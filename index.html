@@ -500,7 +500,7 @@
                     
                     <div class="form-group">
                         <label for="poolType">Pool Type (optional)</label>
-                        <select id="poolType" optional>
+                        <select id="poolType">
                             <option value="">Select pool type...</option>
                             <option value="SCY">Short Course Yards (SCY)</option>
                             <option value="SCM">Short Course Meters (SCM)</option>
@@ -727,8 +727,8 @@
             const poolType = document.getElementById('poolType').value;
             const meetDate = document.getElementById('meetDate').value;
             
-            if (!meetName || !poolType) {
-                alert('Please fill in meet name and pool type');
+            if (!meetName) {
+                alert('Please enter a meet name');
                 return;
             }
             
@@ -769,8 +769,9 @@
             const meetDetails = document.getElementById('meetDetails');
             
             if (currentMeet) {
+                const poolTypeStr = currentMeet.poolType ? ` (${currentMeet.poolType})` : '';
                 const dateStr = currentMeet.date ? ` • ${new Date(currentMeet.date).toLocaleDateString()}` : '';
-                meetDetails.textContent = `${currentMeet.name} (${currentMeet.poolType})${dateStr}`;
+                meetDetails.textContent = `${currentMeet.name}${poolTypeStr}${dateStr}`;
                 meetInfo.style.display = 'flex';
             }
         }
