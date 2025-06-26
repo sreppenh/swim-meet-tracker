@@ -675,6 +675,49 @@
         const availableEmojis = ['🐬', '🦈', '🐙', '🐠', '🐟', '🦭', '🐳', '🦑', '🌊', '⭐', '🚀', '⚡', '🔥', '💎', '🎯', '🏆', '🎪', '🎨', '🎭', '🎸'];
         let nextEmojiIndex = 0;
 
+        // Auto-save functionality to prevent data loss
+        function saveToStorage() {
+            try {
+                const data = {
+                    events: events,
+                    currentMeet: currentMeet,
+                    swimmerColors: swimmerColors,
+                    swimmerEmojis: swimmerEmojis,
+                    nextColorIndex: nextColorIndex,
+                    nextEmojiIndex: nextEmojiIndex
+                };
+                localStorage.setItem('swimMeetTracker', JSON.stringify(data));
+            } catch (error) {
+                console.log('Could not save data:', error);
+            }
+        }
+
+        function loadFromStorage() {
+            try {
+                const saved = localStorage.getItem('swimMeetTracker');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    events = data.events || [];
+                    currentMeet = data.currentMeet || null;
+                    swimmerColors = data.swimmerColors || {};
+                    swimmerEmojis = data.swimmerEmojis || {};
+                    nextColorIndex = data.nextColorIndex || 0;
+                    nextEmojiIndex = data.nextEmojiIndex || 0;
+                    
+                    // Hide splash screen if we have a current meet
+                    if (currentMeet) {
+                        document.getElementById('splashScreen').style.display = 'none';
+                        updateMeetInfo();
+                    }
+                    
+                    renderEvents();
+                    return true;
+                }
+            } catch (error) {
+                console.log('Could not load saved data:', error);
+            }
+            return false;
+        }
         // Helper functions - defined first to avoid reference errors
         function checkForRelay() {
             try {
@@ -747,6 +790,7 @@
             
             // Show meet info
             updateMeetInfo();
+            saveToStorage(); // Save meet info
         }
         
         function changeMeet() {
@@ -762,6 +806,10 @@
             document.getElementById('meetName').value = '';
             document.getElementById('poolType').value = '';
             document.getElementById('meetDate').value = '';
+            
+            // Clear saved data
+            localStorage.removeItem('swimMeetTracker');
+            currentMeet = null;
             
             // Show splash screen
             document.getElementById('splashScreen').style.display = 'flex';
@@ -839,6 +887,7 @@
             events.push(event);
             clearFormExceptSwimmer();
             renderEvents();
+            saveToStorage(); // Auto-save after adding event
         }
 
         function toggleEventCompleted(id) {
@@ -846,12 +895,14 @@
             if (event) {
                 event.completed = !event.completed;
                 renderEvents();
+                saveToStorage(); // Auto-save when checking off events
             }
         }
 
         function removeEvent(id) {
             events = events.filter(event => event.id !== id);
             renderEvents();
+            saveToStorage(); // Auto-save when removing events
         }
 
         function clearForm() {
@@ -1071,8 +1122,15 @@
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            // Try to load saved data first
+            const dataLoaded = loadFromStorage();
+            
             setupTypeahead();
-            renderEvents();
+            
+            // Only render empty state if no data was loaded
+            if (!dataLoaded) {
+                renderEvents();
+            }
         });
     </script>
 </body>
