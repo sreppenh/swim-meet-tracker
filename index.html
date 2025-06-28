@@ -80,6 +80,11 @@
             font-size: 0.9em;
         }
         
+        input::placeholder, select option[value=""] {
+            color: #9ca3af;
+            opacity: 1;
+        }
+        
         input, select {
             padding: 12px;
             border: 2px solid #e5e7eb;
@@ -88,6 +93,7 @@
             transition: border-color 0.2s;
             width: 100%;
             box-sizing: border-box;
+            color: #374151;
         }
         
         input:focus, select:focus {
@@ -107,8 +113,14 @@
             height: fit-content;
         }
         
-        .btn:hover {
+        .btn:hover, .btn:focus {
             transform: translateY(-2px);
+            outline: 2px solid #4facfe;
+            outline-offset: 2px;
+        }
+        
+        .btn:focus {
+            transform: translateY(-1px);
         }
         
         .btn-danger {
@@ -267,6 +279,12 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
+            position: relative;
+        }
+        
+        .custom-checkbox:focus {
+            outline: 2px solid #4facfe;
+            outline-offset: 2px;
         }
         
         .custom-checkbox.checked {
@@ -275,8 +293,16 @@
             color: white;
         }
         
-        .custom-checkbox:hover {
-            border-color: #10b981;
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         
         .compact-event-item {
@@ -686,19 +712,23 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="swimmerName">Swimmer Name</label>
-                            <input type="text" id="swimmerName" placeholder="Enter swimmer's name">
+                            <input type="text" id="swimmerName" placeholder="Enter swimmer's name" aria-required="true" aria-describedby="swimmerName-help">
+                            <div id="swimmerName-help" class="sr-only">Enter the name of the swimmer for this event</div>
                         </div>
                         <div class="form-group">
                             <label for="eventNumber">Event #</label>
-                            <input type="number" id="eventNumber" placeholder="1" min="1">
+                            <input type="number" id="eventNumber" placeholder="1" min="1" aria-required="true" aria-describedby="eventNumber-help">
+                            <div id="eventNumber-help" class="sr-only">Enter the event number from the meet program</div>
                         </div>
                         <div class="form-group">
                             <label for="heat">Heat</label>
-                            <input type="number" id="heat" placeholder="1" min="1">
+                            <input type="number" id="heat" placeholder="1" min="1" aria-required="true" aria-describedby="heat-help">
+                            <div id="heat-help" class="sr-only">Enter the heat number for this event</div>
                         </div>
                         <div class="form-group">
                             <label for="lane">Lane</label>
-                            <input type="number" id="lane" placeholder="1" min="1" max="10">
+                            <input type="number" id="lane" placeholder="1" min="1" max="10" aria-required="true" aria-describedby="lane-help">
+                            <div id="lane-help" class="sr-only">Enter the lane number, typically 1 through 10</div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -1192,7 +1222,7 @@
                         <span class="compact-heat">H${event.heat}</span>
                         <span class="compact-lane">L${event.lane}</span>
                     </div>
-                    <div class="custom-checkbox ${event.completed ? 'checked' : ''}" onclick="toggleEventCompleted(${event.id})">
+                    <div class="custom-checkbox ${event.completed ? 'checked' : ''}" onclick="toggleEventCompleted(${event.id})" tabindex="0" role="checkbox" aria-checked="${event.completed}" aria-label="Mark ${event.swimmerName} Event ${event.eventNumber} as completed" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleEventCompleted(${event.id});}">
                         ${event.completed ? '✓' : ''}
                     </div>
                 </div>
