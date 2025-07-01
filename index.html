@@ -345,11 +345,7 @@
             font-weight: 600;
             font-size: 1em;
             color: #1f2937;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            margin-bottom: 2px;
         }
         
         .compact-event-info {
@@ -523,6 +519,7 @@
             .compact-event-item {
                 flex-direction: row;
                 flex-wrap: nowrap;
+                gap: 10px;
             }
             
             .compact-event-details {
@@ -1178,12 +1175,11 @@
                     <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
                     <div class="compact-event-details">
                         <div class="compact-swimmer-name">
-                            <span>${event.swimmerName}</span>
-                            <span>${getEventIcon(event.eventName, event.relayPosition)}</span>
+                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
                         </div>
                         <div class="compact-event-info">
-                            <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
-                            ${event.seedTime ? `<span style="flex-shrink: 0;">Seed: ${event.seedTime}</span>` : ''}
+                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
                         </div>
                     </div>
                     <div class="compact-heat-lane">
@@ -1217,12 +1213,11 @@
                     <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
                     <div class="compact-event-details">
                         <div class="compact-swimmer-name">
-                            <span>${event.swimmerName}</span>
-                            <span>${getEventIcon(event.eventName, event.relayPosition)}</span>
+                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
                         </div>
                         <div class="compact-event-info">
-                            <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
-                            ${event.seedTime ? `<span style="flex-shrink: 0;">Seed: ${event.seedTime}</span>` : ''}
+                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
                         </div>
                     </div>
                     <div class="compact-heat-lane">
