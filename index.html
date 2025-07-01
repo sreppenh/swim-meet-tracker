@@ -338,7 +338,6 @@
         .compact-event-details {
             flex: 1;
             min-width: 0;
-            overflow: hidden;
         }
         
         .compact-swimmer-name {
@@ -519,7 +518,6 @@
             .compact-event-item {
                 flex-direction: row;
                 flex-wrap: nowrap;
-                gap: 10px;
             }
             
             .compact-event-details {
@@ -1178,7 +1176,8 @@
                             ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
                         </div>
                         <div class="compact-event-info">
-                            ${event.eventName || 'Event ' + event.eventNumber}${event.seedTime ? ` • Seed: ${event.seedTime}` : ''}
+                            <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span style="flex-shrink: 0;">Seed: ${event.seedTime}</span>` : ''}
                         </div>
                     </div>
                     <div class="compact-heat-lane">
@@ -1215,8 +1214,8 @@
                             ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
                         </div>
                         <div class="compact-event-info">
-                            <span>${event.eventName || 'Event ' + event.eventNumber}</span>
-                            ${event.seedTime ? `<span>Seed: ${event.seedTime}</span>` : ''}
+                            <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
+                            ${event.seedTime ? `<span style="flex-shrink: 0;">Seed: ${event.seedTime}</span>` : ''}
                         </div>
                     </div>
                     <div class="compact-heat-lane">
