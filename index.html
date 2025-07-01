@@ -338,13 +338,18 @@
         .compact-event-details {
             flex: 1;
             min-width: 0;
+            overflow: hidden;
         }
         
         .compact-swimmer-name {
             font-weight: 600;
             font-size: 1em;
             color: #1f2937;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         
         .compact-event-info {
@@ -1173,7 +1178,8 @@
                     <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
                     <div class="compact-event-details">
                         <div class="compact-swimmer-name">
-                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
+                            <span>${event.swimmerName}</span>
+                            <span>${getEventIcon(event.eventName, event.relayPosition)}</span>
                         </div>
                         <div class="compact-event-info">
                             <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
@@ -1211,7 +1217,8 @@
                     <div class="compact-event-number swimmer-color-${getSwimmerColor(event.swimmerName)}">${event.eventNumber}</div>
                     <div class="compact-event-details">
                         <div class="compact-swimmer-name">
-                            ${event.swimmerName} ${getEventIcon(event.eventName, event.relayPosition)}
+                            <span>${event.swimmerName}</span>
+                            <span>${getEventIcon(event.eventName, event.relayPosition)}</span>
                         </div>
                         <div class="compact-event-info">
                             <span style="flex-shrink: 0;">${event.eventName || 'Event ' + event.eventNumber}</span>
