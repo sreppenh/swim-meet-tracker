@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=https://swim-meet-tracker-react.vercel.app/">
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>Redirecting you to the new Swim Meet Tracker app...<br>
+     If you're not redirected, <a href="https://swim-meet-tracker-react.vercel.app/">click here</a>.
+  </p>
+</body>
+</html>
